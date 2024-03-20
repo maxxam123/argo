@@ -1,23 +1,23 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: first-application
-  namespace: argocd
+  name: second
+  namespace: max
+  labels:
+    app: react01-front
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/maxxam123/argo.git
-    targetRevision: HEAD
-    path: argo
-  destination:
-    server: https://kubernetes.default.svc
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: false
-      allowEmpty: false
-    syncOptions:
-      - Validate=true
-      - CreateNamespace=false
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react01-front
+  template:
+    metadata:
+      labels:
+        app: react01-front
+    spec:
+      containers:
+      - name: react01-front
+        image: nginx
+        ports:
+        - containerPort: 3000
